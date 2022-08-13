@@ -19,7 +19,6 @@ class Solution {
         char[] strChar = stretchy.toCharArray();
         char strtmp = strChar[0];
         int strCount = 0;
-        System.out.println("regular.length():" + regular.length() + " stretchy.length():" + stretchy.length());
         while (strPoint < stretchy.length() && regPoint < regular.length()) {
             regtmp = regChar[regPoint];
             regCount = 0;
@@ -29,12 +28,10 @@ class Solution {
                 regPoint++;
                 regCount++;
             }
-            System.out.println("regtmp:" + regtmp + " regPoint:" + regPoint + " regCount:" + regCount);
             while (strPoint < stretchy.length() && strChar[strPoint] == strtmp) {
                 strPoint++;
                 strCount++;
             }
-            System.out.println("strtmp:" + strtmp + " strPoint:" + strPoint + " strCount:" + strCount);
 
             if (regtmp != strtmp) {
                 return 0;
