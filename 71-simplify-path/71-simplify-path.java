@@ -1,6 +1,6 @@
 class Solution {
     public String simplifyPath(String path) {
-        String[] pathArray = path.split("/+");
+        String[] pathArray = path.split("/");
         Stack<String> stack = new Stack<>();
 
         for (String s : pathArray) {
