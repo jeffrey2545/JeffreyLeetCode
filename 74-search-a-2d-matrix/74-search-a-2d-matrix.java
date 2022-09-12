@@ -9,7 +9,6 @@ class Solution {
         while (startPoint + 1 < endPoint) {
             int midPoint = (startPoint + endPoint) / 2;
             int mid = oneToTwo(matrix, midPoint);
-            System.out.println(mid);
             if (mid == target) {
                 return true;
             }
@@ -30,11 +29,8 @@ class Solution {
     }
     
     public int oneToTwo(int[][] matrix, int pointer) {
-        // if (pointer <= matrix) {}
         int x = pointer / matrix[0].length;
         int y = (pointer % matrix[0].length);
-        // System.out.println(x);
-        // System.out.println(y);
         return matrix[x][y];
     }
 }
