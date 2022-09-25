@@ -7,12 +7,12 @@ class Solution {
         }
         Arrays.sort(nums);
         
-        dfs(nums, 0, subset, result);
+        dfs2(nums, 0, subset, result);
 
         return result;
     }
     
-    public void dfs(int[] nums, int point, List<Integer> subset, List<List<Integer>> result) {
+    private void dfs1(int[] nums, int point, List<Integer> subset, List<List<Integer>> result) {
         if (point == nums.length) {
             result.add(new ArrayList<Integer>(subset));
             return;
@@ -20,11 +20,20 @@ class Solution {
 
         int num = nums[point];
         subset.add(num);
-        dfs(nums, point + 1, subset, result);
+        dfs1(nums, point + 1, subset, result);
 
         subset.remove(subset.size() - 1);
-        dfs(nums, point + 1, subset, result);
+        dfs1(nums, point + 1, subset, result);
 
         return;
+    }
+    
+    private void dfs2(int[] nums, int point, List<Integer> subset, List<List<Integer>> result) {
+        result.add(new ArrayList<Integer>(subset));
+        for (int tmpPoint = point; tmpPoint < nums.length; tmpPoint++) {
+            subset.add(nums[tmpPoint]);
+            dfs2(nums, tmpPoint + 1, subset, result);
+            subset.remove(subset.size() - 1);
+        }
     }
 }
