@@ -9,7 +9,7 @@ class Solution {
     }
     public int minimumTotal(List<List<Integer>> triangle) {
         // return dfs(triangle, 0, 0, new HashMap<Pair, Integer>());
-        return dp(triangle);
+        return dp2(triangle);
     }
     
     private int dfs(List<List<Integer>> triangle, int x, int y, Map<Pair, Integer> map) {
@@ -30,7 +30,7 @@ class Solution {
         return min;
     }
     
-    private int dp(List<List<Integer>> triangle) {
+    private int dp1(List<List<Integer>> triangle) {
         int height = triangle.size();
         int[][] dp = new int[height][triangle.get(height - 1).size()];
         
@@ -51,5 +51,32 @@ class Solution {
         }
         
         return dp[0][0];
+    }
+    
+    private int dp2(List<List<Integer>> triangle) {
+        int height = triangle.size();
+        int[][] dp = new int[height][triangle.get(height - 1).size()];
+        
+        dp[0][0] = triangle.get(0).get(0);
+        for (int i = 1; i < height; i++) {
+            dp[i][0] = triangle.get(i).get(0) + dp[i - 1][0];
+            int bottom = triangle.get(i).size() - 1;
+            dp[i][bottom] = triangle.get(i).get(bottom) + dp[i - 1][bottom - 1];
+        }
+        
+        for (int i = 2; i < height; i++) {
+            for (int k = 1; k < triangle.get(i).size() - 1; k++) {
+                dp[i][k] = Math.min(dp[i - 1][k], dp[i - 1][k - 1]) + triangle.get(i).get(k);
+            }
+        }
+        
+        int result = Integer.MAX_VALUE;
+        for (int num : dp[height - 1]) {
+            // System.out.println(num);
+            if (num < result) {
+                result = num;
+            }
+        }
+        return result;
     }
 }
