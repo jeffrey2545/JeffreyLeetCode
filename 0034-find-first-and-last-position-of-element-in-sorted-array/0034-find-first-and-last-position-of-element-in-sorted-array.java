@@ -27,13 +27,6 @@ class Solution {
                 return result;
             }
         }
-        // if (nums[right] == target) {
-        //     result[1] = right;
-        // } else if (nums[left] == target) {
-        //     result[1] = left;
-        // } else {
-        //     return result;
-        // }
         
         left = 0;
         right = nums.length - 1;
@@ -55,13 +48,6 @@ class Solution {
                 return result;
             }
         }
-        // if (nums[left] == target) {
-        //     result[0] = left;
-        // } else if (nums[right] == target) {
-        //     result[0] = right;
-        // } else {
-        //     return result;
-        // }
 
         Arrays.sort(result);
         return result;
