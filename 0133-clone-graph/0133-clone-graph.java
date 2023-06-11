@@ -23,41 +23,41 @@ class Solution {
         if (node == null) {
             return null;
         }
-        Map<Integer, Node> oldGraph = new HashMap<>();
-        Map<Integer, Node> newGraph = new HashMap<>();
-        // bfs
+        // iterate the whole graph, and put nodes into map1 and list1, also copy nodes into map2
+        // map<integer, list<integer>>
+        // create the new graph, into list2
+        HashMap<Integer, Node> map = new HashMap<>();
+        // HashMap<Integer, List<Integer>> map = new HashMap<>();
+        HashSet<Node> visited = new HashSet<>();
+        List<Node> order = new ArrayList<>();
         Queue<Node> queue = new ArrayDeque<>();
-        queue.offer(node);
-        List<Integer> keys = new ArrayList<>();
+        queue.add(node);
         while (!queue.isEmpty()) {
-            Node tmpNode = queue.poll();
-            List<Node> neighbors = tmpNode.neighbors;
-            oldGraph.put(tmpNode.val, tmpNode);
-            Node newNode = new Node(tmpNode.val);
-            newGraph.put(tmpNode.val, newNode);
-            keys.add(tmpNode.val);
-            for (Node neighbor : neighbors) {
-                if (!oldGraph.containsValue(neighbor)) {
-                    queue.offer(neighbor);
+            Node head = queue.poll();
+            visited.add(head);
+            
+            order.add(head);
+            Node newNode = new Node(head.val);
+            map.put(head.val, newNode);
+            // List<Integer> neighborsList = new ArrayList<>();
+            for (Node neighbor : head.neighbors) {
+                // neighborsList.add(neighbor.val);
+                if (!visited.contains(neighbor)) {
+                    queue.add(neighbor);
                 }
             }
+            // map.put(head.val, neighborsList);
         }
         
-        // add children
-        for (int key : keys) {
-            Node oldNode = oldGraph.get(key);
-            List<Node> oldNeighbors = oldNode.neighbors;
-            
-            Node newNode = newGraph.get(key);
+        // List<Node> newGraph = new ArrayList<>();
+        for (Node head : order) {
             List<Node> newNeighbors = new ArrayList<>();
-            
-            for (Node oldNeighbor : oldNeighbors) {
-                int keyNeighbor = oldNeighbor.val;
-                newNeighbors.add(newGraph.get(keyNeighbor));
+            for (Node neighbor : head.neighbors) {
+                newNeighbors.add(map.get(neighbor.val));
             }
-            newNode.neighbors = newNeighbors;
+            map.get(head.val).neighbors = newNeighbors;
         }
         
-        return newGraph.get(keys.get(0));
+        return map.get(order.get(0).val);
     }
 }
