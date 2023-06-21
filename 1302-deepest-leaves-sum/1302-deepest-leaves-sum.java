@@ -14,34 +14,42 @@
  * }
  */
 class Solution {
+    public int max;
+    
     public int deepestLeavesSum(TreeNode root) {
-        Queue<TreeNode> queue = new ArrayDeque<>();
-        List<Integer> list = new ArrayList<>();
-        int sum = 0;
-        queue.add(root);
-        list.add(root.val);
+        max = Integer.MIN_VALUE;
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        dfs(root, map, 0);
         
-        while (!queue.isEmpty()) {
-            sum = 0;
-            for (int val : list) {
-                sum = sum + val;
-            }
-            
-            list.clear();
-            int size = queue.size();
-            for (int i = 0; i < size; i++) {
-                TreeNode head = queue.poll();
-                if (head.left != null) {
-                    queue.add(head.left);
-                    list.add(head.left.val);
-                }
-                if (head.right != null) {
-                    queue.add(head.right);
-                    list.add(head.right.val);
-                }
-            }
+        int ans = 0;
+        for (int num : map.get(max)) {
+            ans = ans + num;
         }
-
-        return sum;
+        return ans;
+    }
+    
+    public void dfs(TreeNode root, HashMap<Integer, List<Integer>> map, int level) {
+        if (root.left == null && root.right == null) {
+            max = Math.max(max, level);
+            if (map.containsKey(level)) {
+                List<Integer> list = map.get(level);
+                list.add(root.val);
+                map.put(level, list);
+            } else {
+                List<Integer> list = new ArrayList<>();
+                list.add(root.val);
+                map.put(level, list);
+            }
+            return;
+        }
+        
+        if (root.left != null) {
+            dfs(root.left, map, level + 1);
+        }
+        if (root.right != null) {
+            dfs(root.right, map, level + 1);
+        }
+        
+        return;
     }
 }
