@@ -28,7 +28,5 @@ class Solution {
         dfs(root.left, list);
         list.add(root.val);
         dfs(root.right, list);
-        
-        return;
     }
 }
