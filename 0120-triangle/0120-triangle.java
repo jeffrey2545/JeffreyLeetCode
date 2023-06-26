@@ -9,7 +9,7 @@ class Solution {
     }
     public int minimumTotal(List<List<Integer>> triangle) {
         // return dfs(triangle, 0, 0, new HashMap<Pair, Integer>());
-        return dp3(triangle);
+        return dp4(triangle);
     }
     
     private int dfs(List<List<Integer>> triangle, int x, int y, Map<Pair, Integer> map) {
@@ -95,5 +95,29 @@ class Solution {
         }
         
         return memo[0][0];
+    }
+    
+    public int dp4(List<List<Integer>> triangle) {
+        int triangleHeight = triangle.size();
+        int[][] memo = new int[triangleHeight][triangle.get(triangleHeight - 1).size()];
+        
+        memo[0][0] = triangle.get(0).get(0);
+        for (int height = 1; height < triangleHeight; height++) {
+            memo[height][0] = memo[height - 1][0] + triangle.get(height).get(0);
+            int right = triangle.get(height).size() - 1;
+            memo[height][right] = memo[height - 1][right - 1] + triangle.get(height).get(right);
+        }
+        
+        for (int height = 2; height < triangleHeight; height++) {
+            for (int left = 1; left < triangle.get(height).size() - 1; left++) {
+                memo[height][left] = Math.min(memo[height - 1][left - 1], memo[height - 1][left]) + triangle.get(height).get(left);
+            }
+        }
+        
+        int ans = Integer.MAX_VALUE;
+        for (int path : memo[triangleHeight - 1]) {
+            ans = Math.min(ans, path);
+        }
+        return ans;
     }
 }
