@@ -1,26 +1,22 @@
 class Solution {
-    int[] memo;
     public int climbStairs(int n) {
-        memo = new int[n + 1];
-        Arrays.fill(memo, -1);
+        HashMap<Integer, Integer> memo = new HashMap<>();
         return dfs(n, memo);
     }
     
-    public int dfs(int n, int[] memo) {
-        if (n <= 1 && n >= 0) {
+    public int dfs(int n, HashMap<Integer, Integer> memo) {
+        if (n == 0 || n == 1) {
             return 1;
         }
-        if (n < 0) {
-            return 0;
-        }
-        if (memo[n] != -1) {
-            return memo[n];
+        
+        if (memo.containsKey(n)) {
+            return memo.get(n);
         }
         
-        int ways1 = dfs(n - 1, memo);
-        int ways2 = dfs(n - 2, memo);
+        int one = dfs(n - 1, memo);
+        int two = dfs(n - 2, memo);
         
-        memo[n] = ways1 + ways2;
-        return ways1 + ways2;
+        memo.put(n, one + two);
+        return one + two;
     }
 }
