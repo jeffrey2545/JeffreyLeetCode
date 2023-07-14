@@ -1,21 +1,21 @@
 class Solution {
     public List<String> generateParenthesis(int n) {
-
-        List<String> result = new ArrayList<>();
-        dfs(n, 0, 0, "", result);
-        return result;
+        List<String> ans = new ArrayList<>();
+        dfs(n, ans, "", 0, 0);
+        return ans;
     }
-    private void dfs(int n, int left, int right, String set, List<String> result) {
-        if (set.length() == n * 2) {
-            result.add(set);
-            return;
-        }
-        if (left < n) {
-            dfs(n, left + 1, right, set + "(", result);
+    private void dfs(int n, List<String> ans, String string, int left, int right) {
+      if (string.length() == n * 2) {
+        ans.add(string);
+        return;
+      }
 
-        }
-        if (right < left) {
-            dfs(n, left, right + 1, set + ")", result);
-        }
+
+      if (left < n) {
+        dfs(n, ans, string + "(", left + 1, right);// left
+      }
+      if (left > right) {
+        dfs(n, ans, string + ")", left, right + 1);// right
+      }
     }
 }
