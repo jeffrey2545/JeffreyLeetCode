@@ -1,49 +1,43 @@
 class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        // calcultae the in-degree
-        // make the map
-        int[] inDegree = new int[numCourses];
-        Arrays.fill(inDegree, 0);
-        HashMap<Integer, List<Integer>> map = new HashMap<>();
-        
+        // Make a graph
+        // Make a indegree
+        int[] indegree = new int[numCourses];
+        HashMap<Integer, HashSet> graph = new HashMap<>();
         for (int i = 0; i < numCourses; i++) {
-            List<Integer> targets = new ArrayList<>();
-            map.put(i, targets);
+            graph.put(i, new HashSet<>());
         }
-        
         for (int[] prerequisite : prerequisites) {
-            int target = prerequisite[0];
             int pre = prerequisite[1];
-            inDegree[target]++;
-            
-            List<Integer> targets = map.get(pre);
-            targets.add(target);
-            map.replace(pre, map.get(pre), targets);
+            int target = prerequisite[0];
+            HashSet<Integer> set = graph.get(pre);
+            set.add(target);
+            graph.put(pre, set);
+            indegree[target]++;
         }
-        // put every degree = 0 into queue
+        // topological
         Queue<Integer> queue = new ArrayDeque<>();
-        for (int course = 0; course < numCourses; course++) {
-            int prerequisite = inDegree[course];
-            if (prerequisite == 0) {
-                queue.add(course);
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                queue.add(i);
             }
         }
-        // while queue
-        int count = 0;
         while (!queue.isEmpty()) {
-            int course = queue.poll();
-            count++;
-            List<Integer> targets = map.get(course);
-            for (int i = 0; i < targets.size(); i++) {
-                int target = targets.get(i);
-                inDegree[target]--;
-                if (inDegree[target] == 0) {
+            int pre = queue.poll();
+            HashSet<Integer> set = graph.get(pre);
+            for (Integer target : set) {
+                indegree[target]--;
+                if (indegree[target] == 0) {
                     queue.add(target);
                 }
             }
         }
-        // check if the count == numCourses
-        
-        return count == numCourses;
+        // return
+        for (int course : indegree) {
+            if (course != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }
