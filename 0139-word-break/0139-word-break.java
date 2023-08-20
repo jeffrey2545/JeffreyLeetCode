@@ -1,56 +1,42 @@
 class Solution {
     public boolean wordBreak(String s, List<String> wordDict) {
-        if (s.length() == 0 || s == null) {
-            return true;
-        }
-        if (wordDict == null || wordDict.size() == 0) {
-            return false;
-        }
-
-        int maxLength = 0;
+        Set<String> set = new HashSet<>();
         for (String word : wordDict) {
-            maxLength = Math.max(maxLength, word.length());
+            set.add(word);
         }
-
-        return dfs(s, 0, maxLength, wordDict, new HashMap<Integer, Boolean>());
+        int[] memo = new int[s.length()];
+        
+        return dfs(s, 0, set, memo);
     }
     
-    public boolean dfs(String s, int start, int maxLength, List<String> wordDict, Map<Integer, Boolean> memo) {
-        if (memo.containsKey(start)) {
-            return memo.get(start);
-        }
-
+    public boolean dfs(String s, int start, Set<String> set, int[] memo) {
         if (start == s.length()) {
             return true;
         }
-
+        
+        if (memo[start] == 1) {
+            return true;
+        } else if (memo[start] == -1) {
+            return false;
+        }
+        
+        boolean success = false;
         for (int end = start + 1; end <= s.length(); end++) {
-            if (end - start > maxLength) {
-                break;
-            }
-
-            String word = s.substring(start, end);
-            
-            if (!inList(word, wordDict)) {
+            String newS = s.substring(start, end);
+            if (set.contains(newS)) {
+                if (dfs(s, end, set, memo)) {
+                    success = true;
+                }
+            } else {
                 continue;
             }
-
-            if (dfs(s, end, maxLength, wordDict, memo)) {
-                return true;
-            }
         }
-
-        memo.put(start, false);
-
-        return false;
-    }
-    
-    public boolean inList(String target, List<String> wordDict) {
-        for (String word : wordDict) {
-            if (word.equals(target)) {
-                return true;
-            }
+        
+        if (success) {
+            memo[start] = 1;
+        } else {
+            memo[start] = -1;
         }
-        return false;
+        return success;
     }
 }
