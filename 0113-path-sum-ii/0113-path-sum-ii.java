@@ -15,37 +15,32 @@
  */
 class Solution {
     public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
-        List<List<Integer>> result = new ArrayList<>();
         if (root == null) {
-            return result;
+            return new ArrayList<>();
         }
-        List<Integer> path = new ArrayList<>();
-        dfs(root, targetSum - root.val, path, result);
-        return result;
+        List<List<Integer>> ans = new ArrayList<>();
+        dfs(root, targetSum, new ArrayList<>(), ans);
+        return ans;
     }
     
-    public void dfs(TreeNode root, int targetSum, List<Integer> path, List<List<Integer>> result) {
+    public void dfs(TreeNode root, int targetSum, List<Integer> currPath, List<List<Integer>> ans) {
         if (root.left == null && root.right == null) {
-            if (targetSum == 0) {
-                path.add(root.val);
-                result.add(new ArrayList<>(path));
-                path.remove(path.size() - 1);
-                return;
-            } else {
-                return;
+            if (targetSum - root.val == 0) {
+                currPath.add(root.val);
+                ans.add(new ArrayList<>(currPath));
+                currPath.remove(currPath.size() - 1);
             }
+            return;
         }
         
+        currPath.add(root.val);
         if (root.left != null) {
-            path.add(root.val);
-            dfs(root.left, targetSum - root.left.val, path, result);
-            path.remove(path.size() - 1);
+            dfs(root.left, targetSum - root.val, currPath, ans);
         }
         if (root.right != null) {
-            path.add(root.val);
-            dfs(root.right, targetSum - root.right.val, path, result);
-            path.remove(path.size() - 1);
+            dfs(root.right, targetSum - root.val, currPath, ans);
         }
+        currPath.remove(currPath.size() - 1);
         
         return;
     }
