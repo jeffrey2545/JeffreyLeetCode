@@ -1,21 +1,11 @@
 class Solution {
-    int[] memo;
     public int minCostClimbingStairs(int[] cost) {
-        memo = new int[cost.length + 1];
-        Arrays.fill(memo, -1);
-        return Math.min(dfs(cost, 0), dfs(cost, 1));
-    }
-    
-    public int dfs(int[] cost, int index) {
-        if (index == cost.length - 1 || index == cost.length - 2) {
-            return cost[index];
+        int[] dp = new int[cost.length + 1];
+        for (int i = 2; i < dp.length; i++) {
+            int one = dp[i - 1] + cost[i - 1];
+            int two = dp[i - 2] + cost[i - 2];
+            dp[i] = Math.min(one, two);
         }
-        if (memo[index] != -1) {
-            return memo[index];
-        }
-        
-        int sum = Math.min(dfs(cost, index + 1), dfs(cost, index + 2)) + cost[index];
-        memo[index] = sum;
-        return sum;
+        return dp[dp.length - 1];
     }
 }
