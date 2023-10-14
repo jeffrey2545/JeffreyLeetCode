@@ -1,30 +1,29 @@
 class Solution {
     public int countSubstrings(String s) {
-        int count = 0;
-        for (int i = 0; i < s.length(); i++) {
-            count = count + palidrome(s, i, false);
-            count = count + palidrome(s, i, true);
+        int length = s.length();
+        boolean[][] dp = new boolean[length][length];
+        
+        for (int i = 0; i < length; i++) {
+            dp[i][i] = true;
         }
-        return count + s.length();
-    }
-    
-    public int palidrome(String s, int i, boolean mid) {
-        int left, right;
-        int count = 0;
-        if (mid) {
-            left = i;
-            right = i + 1;
-        } else {
-            left = i - 1;
-            right = i + 1;
-        }
-
-        while ((left >= 0 && right < s.length()) && (s.charAt(left) == s.charAt(right))) {
-            count++;
-            left--;
-            right++;
+        for (int i = 0; i < length - 1; i++) {
+            dp[i][i + 1] = (s.charAt(i) == s.charAt(i + 1));
         }
         
-        return count;
+        for (int size = 3; size <= length; size++) {
+            for (int l = 0, r = l + size - 1; r < length; l++, r++) {
+                dp[l][r] = dp[l + 1][r - 1] && (s.charAt(l) == s.charAt(r));
+            }
+        }
+        
+        int ans = 0;
+        for (boolean[] row : dp) {
+            for (boolean col : row) {
+                if (col) {
+                    ans++;
+                }
+            }
+        }
+        return ans;
     }
 }
