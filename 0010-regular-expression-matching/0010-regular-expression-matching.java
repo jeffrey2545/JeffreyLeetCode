@@ -1,41 +1,44 @@
 class Solution {
+    int[][] memo;
+    
     public boolean isMatch(String s, String p) {
-        boolean[][] visited = new boolean[s.length() + 1][p.length() + 1];
-        boolean[][] memo = new boolean[s.length() + 1][p.length() + 1];
-        
-        return dfs(s, p, 0, 0, visited, memo);
+        memo = new int[s.length() + 1][p.length() + 1];
+        for (int[] arr : memo) {
+            Arrays.fill(arr, 2);
+        }
+        return dfs(s, p, 0, 0);
     }
     
-    public boolean dfs(String source, String pattern, int sIndex, int pIndex, boolean[][] visited, boolean[][] memo) {
-        if (pIndex == pattern.length()) {
-            return sIndex == source.length();
+    public boolean dfs(String s, String p, int sI, int pI) {
+        // base case
+        if (sI == s.length() && pI == p.length()) {
+            return true;
         }
-        if (visited[sIndex][pIndex]) {
-            return memo[sIndex][pIndex];
-        }
-        
-        // char sCh = source.charAt(sIndex);
-        char pCh = pattern.charAt(pIndex);
-        boolean result = false;
-        if (pIndex + 1 < pattern.length() && pattern.charAt(pIndex + 1) == '*') {
-            if (dfs(source, pattern, sIndex, pIndex + 2, visited, memo)) {
-                result = true;
-            }
-            if (sIndex < source.length() && (pCh == '.' || pCh == source.charAt(sIndex))) {
-                if (dfs(source, pattern, sIndex + 1, pIndex, visited, memo)) {
-                    result = true;
-                }
-            }
-        } else if (sIndex < source.length()) {
-            result = match(source.charAt(sIndex), pCh) && dfs(source, pattern, sIndex + 1, pIndex + 1, visited, memo);
+        if (pI == p.length()) {
+            return false;
         }
         
-        visited[sIndex][pIndex] = true;
-        memo[sIndex][pIndex] = result;
-        return result;
-    }
-    
-    public boolean match(char sCh, char pCh) {
-        return (sCh == pCh) || pCh == '.';
+        // memo
+        if (memo[sI][pI] == 0) {
+            return false;
+        } else if (memo[sI][pI] == 1) {
+            return true;
+        }
+        
+        // next
+        boolean currMatch = sI < s.length() && ((s.charAt(sI) == p.charAt(pI)) || (p.charAt(pI) == '.'));
+        boolean next;
+        if (pI + 1 < p.length() && p.charAt(pI + 1) == '*') {
+            next = (dfs(s, p, sI, pI + 2)) || (currMatch && dfs(s, p, sI + 1, pI));
+        } else {
+            next = currMatch && dfs(s, p, sI + 1, pI + 1);
+        }
+        
+        if (next) {
+            memo[sI][pI] = 1;
+        } else {
+            memo[sI][pI] = 0;
+        }
+        return next;
     }
 }
