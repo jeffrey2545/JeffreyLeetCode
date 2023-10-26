@@ -1,63 +1,41 @@
-public class Position {
-    int x;
-    int y;
-    Position(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-}
-
 class Solution {
     public int maxAreaOfIsland(int[][] grid) {
         int ans = 0;
-        boolean[][] visited = new boolean[grid.length][grid[0].length];
         for (int row = 0; row < grid.length; row++) {
-            for (int col = 0; col < grid[0].length; col++) {
-                if (grid[row][col] == 1 && !visited[row][col]) {
-                    ans = Math.max(ans, bfs(grid, visited, new Position(row, col)));
+            for (int col = 0; col < grid[row].length; col++) {
+                if (grid[row][col] == 1) {
+                    int area = bfs(grid, row, col);
+                    System.out.println(area);
+                    ans = Math.max(ans, area);
                 }
             }
         }
         return ans;
     }
     
-    public int bfs(int[][] grid, boolean[][] visited, Position start) {
-        int[] xDelta = {1, -1, 0, 0};
-        int[] yDelta = {0, 0, 1, -1};
-        
-        Queue<Position> queue = new ArrayDeque<>();
-        int count = 0;
-        queue.add(start);
-        visited[start.x][start.y] = true;
+    public int bfs(int[][] grid, int row, int col) {
+        Queue<int[]> queue = new ArrayDeque<>();
+        queue.add(new int[]{row, col});
+        grid[row][col] = 0;
+        int area = 0;
+        int[] deltaX = new int[]{1, -1, 0, 0};
+        int[] deltaY = new int[]{0, 0, 1, -1};
         while (!queue.isEmpty()) {
-            Position curr = queue.poll();
-            count++;
+            int[] curr = queue.poll();
+            area++;
             for (int dir = 0; dir < 4; dir++) {
-                int newX = curr.x + xDelta[dir];
-                int newY = curr.y + yDelta[dir];
-                Position newPos = new Position(newX, newY);
-                if (reachable(grid, visited, newPos)) {
-                    queue.add(newPos);
-                    visited[newX][newY] = true;
+                int newRow = curr[0] + deltaX[dir];
+                int newCol = curr[1] + deltaY[dir];
+                if (newRow >= grid.length || newRow < 0 || newCol >= grid[0].length || newCol < 0) {
+                    continue;
                 }
+                if (grid[newRow][newCol] == 0) {
+                    continue;
+                }
+                queue.add(new int[]{newRow, newCol});
+                grid[newRow][newCol] = 0;
             }
         }
-        return count;
-    }
-    
-    public boolean reachable(int[][] grid, boolean[][] visited, Position pos) {
-        if (pos.x >= grid.length || pos.x < 0) {
-            return false;
-        }
-        if (pos.y >= grid[0].length || pos.y < 0) {
-            return false;
-        }
-        if (visited[pos.x][pos.y]) {
-            return false;
-        }
-        if (grid[pos.x][pos.y] == 0) {
-            return false;
-        }
-        return true;
+        return area;
     }
 }
