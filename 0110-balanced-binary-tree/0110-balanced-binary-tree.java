@@ -32,24 +32,19 @@ class Solution {
     }
     
     public Pair dfs(TreeNode root) {
-        if (root.left == null && root.right == null) {
-            return new Pair(1, true);
+        if (root == null) {
+            return new Pair(0, true);
         }
         
-        Pair left = new Pair(0, true);
-        Pair right = new Pair(0, true);
-        if (root.left != null) {
-            left = dfs(root.left);
-        }
-        if (root.right != null) {
-            right = dfs(root.right);
-        }
+        Pair left = dfs(root.left);
+        Pair right = dfs(root.right);
         
-        if (left.balance && right.balance) {
-            if (Math.abs(left.height - right.height) <= 1) {
-                return new Pair(Math.max(left.height, right.height) + 1, true);
-            }
+        if (!left.balance || !right.balance) {
+            return new Pair(0, false);
         }
-        return new Pair(0, false);
+        if (Math.abs(left.height - right.height) > 1) {
+            return new Pair(0, false);
+        }
+        return new Pair(Math.max(left.height, right.height) + 1, true);
     }
 }
