@@ -1,37 +1,29 @@
 class Solution {
     public int[] productExceptSelf(int[] nums) {
-        int frontProduct = 1;
-        HashMap<Integer, Integer> frontPrefix = new HashMap<>();
-        // 從頭數過來前幾項的積
+        int product = 1;
+        Map<Integer, Integer> leftPrefix = new HashMap<>();
         for (int i = 0; i < nums.length; i++) {
-            frontProduct = frontProduct * nums[i];
-            frontPrefix.put(i + 1, frontProduct);
+            product = product * nums[i];
+            leftPrefix.put(i, product);
         }
-        
-        int backProduct = 1;
-        int back = 1;
-        HashMap<Integer, Integer> backPrefix = new HashMap<>();
-        // 從尾數過來後幾項的積
+        product = 1;
+        Map<Integer, Integer> rightPrefix = new HashMap<>();
         for (int i = nums.length - 1; i >= 0; i--) {
-            backProduct = backProduct * nums[i];
-            backPrefix.put(back, backProduct);
-            back++;
+            product = product * nums[i];
+            rightPrefix.put(i, product);
         }
         
         int[] ans = new int[nums.length];
-        back = nums.length - 1;
-        for (int front = 0; front < nums.length; front++) {
-            int frontV = 1, backV = 1;
-            if (frontPrefix.containsKey(front)) {
-                frontV = frontPrefix.get(front);
+        for (int i = 0; i < ans.length; i++) {
+            int left = 1, right = 1;
+            if (leftPrefix.containsKey(i - 1)) {
+                left = leftPrefix.get(i - 1);
             }
-            if (backPrefix.containsKey(back)) {
-                backV = backPrefix.get(back);
+            if (rightPrefix.containsKey(i + 1)) {
+                right = rightPrefix.get(i + 1);
             }
-            ans[front] = frontV * backV;
-            back--;
+            ans[i] = left * right;
         }
-        
         return ans;
     }
 }
