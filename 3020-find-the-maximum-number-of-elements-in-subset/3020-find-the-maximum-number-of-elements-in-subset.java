@@ -2,7 +2,7 @@ class Solution {
     public int maximumLength(int[] nums) {
         int maxCount = 1;
         // build map
-        TreeMap<Integer, Integer> map = new TreeMap<>();
+        Map<Integer, Integer> map = new HashMap<>();
         for (int num : nums) {
             map.put(num, map.getOrDefault(num, 0) + 1);
         }
@@ -16,9 +16,6 @@ class Solution {
         }
         // iterate the key of map
         for (Integer key : map.keySet()) {
-            // if (map.get(key) < 2) {
-            //     continue;
-            // }
             int currCount = 1;
             int x = key;
             while (map.containsKey(x * x) && map.get(x) >= 2) {
