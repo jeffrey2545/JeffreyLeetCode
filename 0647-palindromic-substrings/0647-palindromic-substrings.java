@@ -1,29 +1,31 @@
 class Solution {
     public int countSubstrings(String s) {
-        int length = s.length();
-        boolean[][] dp = new boolean[length][length];
-        
-        for (int i = 0; i < length; i++) {
+        // create dp
+        boolean[][] dp = new boolean[s.length()][s.length()]; // left and right
+        // initialize dp
+        for (int i = 0; i < s.length(); i++) {
             dp[i][i] = true;
         }
-        for (int i = 0; i < length - 1; i++) {
-            dp[i][i + 1] = (s.charAt(i) == s.charAt(i + 1));
-        }
-        
-        for (int size = 3; size <= length; size++) {
-            for (int l = 0, r = l + size - 1; r < length; l++, r++) {
-                dp[l][r] = dp[l + 1][r - 1] && (s.charAt(l) == s.charAt(r));
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) == s.charAt(i - 1)) {
+                dp[i - 1][i] = true;
             }
         }
-        
-        int ans = 0;
+        // build dp
+        for (int size = 3; size <= s.length(); size++) {
+            for (int left = 0, right = left + size - 1; right < s.length(); left++, right++) {
+                dp[left][right] = dp[left + 1][right - 1] && (s.charAt(left) == s.charAt(right));
+            }
+        }
+        // count
+        int count = 0;
         for (boolean[] row : dp) {
             for (boolean col : row) {
                 if (col) {
-                    ans++;
+                    count++;
                 }
             }
         }
-        return ans;
+        return count;
     }
 }
