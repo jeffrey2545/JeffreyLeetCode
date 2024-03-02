@@ -1,24 +1,24 @@
 class Solution {
     public int minMeetingRooms(int[][] intervals) {
-        PriorityQueue<int[]> mainHeap = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+        PriorityQueue<int[]> rightHeap = new PriorityQueue<>(
+            (a, b) -> a[0] - b[0]
+        );
         for (int[] interval : intervals) {
-            mainHeap.add(interval);
+            rightHeap.add(interval);
+        }
+        PriorityQueue<Integer> leftHeap = new PriorityQueue<>();
+        leftHeap.add(rightHeap.poll()[1]);
+        int ans = 1;
+        
+        while (!rightHeap.isEmpty()) {
+            int[] interval = rightHeap.poll();
+            if (leftHeap.peek() <= interval[0]) {
+                int out = leftHeap.poll();
+            }
+            leftHeap.add(interval[1]);
+            ans = Math.max(ans, leftHeap.size());
         }
         
-        int[] first = mainHeap.poll();
-        PriorityQueue<Integer> smallHeap = new PriorityQueue<>();
-        smallHeap.add(first[1]);
-        int ans = smallHeap.size();
-        while (!mainHeap.isEmpty()) {
-            int[] interval = mainHeap.poll();
-            if (interval[0] < smallHeap.peek()) {
-                smallHeap.add(interval[1]);
-            } else {
-                smallHeap.poll();
-                smallHeap.add(interval[1]);
-            }
-            ans = Math.max(ans, smallHeap.size());
-        }
         return ans;
     }
 }
