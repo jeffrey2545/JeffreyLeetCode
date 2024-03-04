@@ -1,30 +1,40 @@
 class Solution {
     public String reverseWords(String s) {
-        String curr = "";
+        // deal with start and bottom
+        int i = 0;
+        while (s.charAt(i) == ' ') {
+            i++;
+        }
+        s = s.substring(i, s.length());
+        i = s.length() - 1;
+        while (s.charAt(i) == ' ') {
+            i--;
+        }
+        s = s.substring(0, i + 1);
+        // deal middle space
         List<String> list = new ArrayList<>();
+        String word = "";
         for (char c : s.toCharArray()) {
-            if (c != ' ') {
-                curr = curr + c;
-            } else {
-                if (curr.length() != 0) {
-                    list.add(curr);
-                    curr = "";
+            if (c == ' ') {
+                if (word.length() != 0) {
+                    list.add(word);
+                    word = "";
                 }
+            } else {
+                word = word + c;
             }
         }
-        if (curr.length() != 0) {
-            list.add(curr);
-            curr = "";
+        if (word.length() != 0) {
+            list.add(word);
         }
-        
-        StringBuilder ans = new StringBuilder();
-        for (int i = list.size() - 1; i >= 0; i--) {
-            ans.append(list.get(i));
-            if (i != 0) {
-                ans.append(" ");
-            }
+        // reverse
+        Collections.reverse(list);
+        // create ans
+        String ans = "";
+        for (int x = 0; x < list.size() - 1; x++) {
+            ans = ans + list.get(x) + " ";
         }
-        
-        return ans.toString();
+        ans = ans + list.get(list.size() - 1);
+        return ans;
     }
 }
